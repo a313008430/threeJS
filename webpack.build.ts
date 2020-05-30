@@ -44,6 +44,7 @@ const config: webpack.Configuration = {
         // use: ["style-loader", "css-loader"],
         //分离css
         use: [
+          //TODO loader的顺序很重要，不然报错。。。。
           // MiniCssExtractPlugin.loader, //css分离 用 分离时 style-loader 这个不能用
           "style-loader", // 将 JS 字符串生成为 style 节点
           "css-loader", // 将 CSS 转化成 CommonJS 模块
