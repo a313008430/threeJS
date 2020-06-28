@@ -1,0 +1,14 @@
+$body-color: #eee;
+
+html,
+body {
+	background-color: $body-color;
+	height: 100%;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	// background-color: $body-color;
+	// background-image: url(./img/微信截图_20200530143442.png);
+}
