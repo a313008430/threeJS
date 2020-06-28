@@ -1,4 +1,8 @@
-import THREE from "three";
+import * as THREE from "three";
+import { CoreEvent, CoreEventMap } from "./core/CoreEvent";
+
+// //TransformControls 可拖拽组件(有辅助线)  url => examples/#misc_controls_transform
+// //OrbitControls 自由相机
 
 /**
  * 游戏主入口和配置逻辑
@@ -12,6 +16,7 @@ class GameControl {
 	currentCamera!: THREE.PerspectiveCamera;
 
 	init() {
+		console.log(THREE);
 		//添加相机
 		let camera = new THREE.PerspectiveCamera(
 			45,
@@ -20,7 +25,7 @@ class GameControl {
 			3000
 		);
 		camera.position.set(100, 50, 100);
-		// camera.position.set(1000, 500, 1000);
+		// camera.position.set(0, 4, 10);
 		camera.lookAt(0, 200, 0);
 		this.currentCamera = camera;
 
@@ -44,9 +49,12 @@ class GameControl {
 	 * @param elapsed 间隔值
 	 */
 	update(time = 0, elapsed = 0) {
-		if (elapsed > 1000 / 60) {
+		//这里的60 就是最大只能60帧
+		if (elapsed >= 1000 / 60) {
 			this.render();
-			elapsed = 0;
+			CoreEvent.emit(CoreEventMap.UPDATE);
+			//这个60的值不动 上限
+			elapsed = 1000 / 60;
 		}
 		//每帧执行一次
 		requestAnimationFrame((_time) => {
@@ -54,7 +62,12 @@ class GameControl {
 		});
 	}
 
-	render() {}
+	/**
+	 * 渲染
+	 */
+	render() {
+		this.renderer.render(this.scene, this.currentCamera);
+	}
 }
 
 export const Game = new GameControl();

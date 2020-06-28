@@ -1,88 +1,42 @@
 import "./index.scss";
+import { Game } from "./Game";
+import { CoreEvent, CoreEventMap } from "./core/CoreEvent";
+import { StatsControl } from "./lib/Stats";
+import { GridHelper } from "three/src/helpers/GridHelper";
+import { OrbitControl } from "./lib/OrbitControl";
+import { BoxBufferGeometry } from "three/src/geometries/Geometries";
+import { MeshLambertMaterial, MeshNormalMaterial } from "three/src/materials/Materials";
+import { Mesh } from "three/src/objects/Mesh";
+import { DirectionalLight } from "three/src/lights/DirectionalLight";
+import { transformControl } from "./lib/TransformControl";
 
-//TransformControls 可拖拽组件(有辅助线)  url => examples/#misc_controls_transform
-//OrbitControls 自由相机
+//游戏初始化
+Game.init();
 
-// url => misc_exporter_ply 这个视角不错
+//辅助线 100总长宽*10个
+Game.scene.add(new GridHelper(100, 20));
+//小性能面板
+let stats = new StatsControl();
+//自由拖拽相机
+let orbitControl = new OrbitControl(Game.currentCamera, Game.render, Game.renderer.domElement);
+//物体可拖拽
+transformControl.init(Game.currentCamera, Game.render, Game.renderer.domElement);
+let control = transformControl.control!;
+Game.scene.add(control);
+control.addEventListener("dragging-changed", function (event) {
+	//防止事件冲突
+	orbitControl.orbit!.enabled = !event.value;
+});
 
-import * as THREE from "three";
-
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
-import Stats from "three/examples/jsm/libs/stats.module";
-
-import model1 from "./res/Soldier.glb";
-import { OrbitControl } from "./lib/OrbitControls";
-
-var camera: THREE.PerspectiveCamera,
-	scene: THREE.Scene,
-	renderer: THREE.WebGLRenderer,
-	stats: Stats;
-var geometry, material, mesh: THREE.Object3D;
-
-init();
-animate();
-
-function init() {
-	// camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 30000);
-	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 3000);
-	camera.position.set(100, 50, 100);
-	// camera.position.set(1000, 500, 1000);
-	camera.lookAt(0, 200, 0);
-
-	scene = new THREE.Scene();
-
-	renderer = new THREE.WebGLRenderer({ antialias: true });
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.setPixelRatio(window.devicePixelRatio);
-	document.body.appendChild(renderer.domElement);
-
-	//
-	new OrbitControl(camera, render, renderer.domElement);
-
-	//辅助线
-	scene.add(new THREE.GridHelper(100, 10));
-
-	var light = new THREE.DirectionalLight(0xffffff, 2);
-	light.position.set(1, 1, 1);
-	scene.add(light);
-
-	// var geometry = new THREE.BoxBufferGeometry(200, 200, 200);
-	// var material = new THREE.MeshLambertMaterial({ transparent: true });
-	// var mesh = new THREE.Mesh(geometry, material);
-	// scene.add(mesh);
-
-	geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-	material = new THREE.MeshNormalMaterial();
-
-	mesh = new THREE.Mesh(geometry, material);
-	scene.add(mesh);
-
-	stats = Stats();
-	document.body.appendChild(stats.dom);
-
-	var loader = new GLTFLoader();
-	loader.load(
-		model1,
-		function (gltf) {
-			// gltf.scene.position.x = 0.2;
-			// gltf.scene.
-			scene.add(gltf.scene);
-			gltf.scene.scale.set(10, 10, 10);
-		},
-		undefined,
-		function (error: any) {
-			console.error(error);
-		}
-	);
-}
-
-function animate() {
-	requestAnimationFrame(animate);
-	render();
+CoreEvent.on(CoreEventMap.UPDATE, () => {
 	stats.update();
-}
+	orbitControl.update();
+});
 
-function render() {
-	renderer.render(scene, camera);
-}
+var geometry = new BoxBufferGeometry(20, 20, 20);
+// var material = new MeshLambertMaterial({ transparent: true });
+var material = new MeshNormalMaterial({ transparent: true });
+var mesh = new Mesh(geometry, material);
+Game.scene.add(mesh);
+
+transformControl.control?.attach(mesh);

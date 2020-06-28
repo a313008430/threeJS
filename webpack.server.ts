@@ -13,6 +13,7 @@ const config: webpack.Configuration = {
 		app: "./app/app.ts",
 	},
 	devtool: "eval",
+	// devtool: "source-map",
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		//[name] 是entry里面的name
