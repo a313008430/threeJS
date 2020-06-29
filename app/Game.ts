@@ -12,21 +12,25 @@ class GameControl {
 	scene!: THREE.Scene;
 	/** 渲染器 */
 	renderer!: THREE.WebGLRenderer;
-	/** 当前相机 */
+	/** 当前相机 => 透视 */
 	currentCamera!: THREE.PerspectiveCamera;
+	// /** 当前相机 => 正交 */
+	// currentCamera!: THREE.OrthographicCamera;
 
 	init() {
-		console.log(THREE);
-		//添加相机
+		//添加相机 => 透视相机
 		let camera = new THREE.PerspectiveCamera(
 			45,
 			window.innerWidth / window.innerHeight,
 			1,
-			3000
+			30000
 		);
-		camera.position.set(100, 50, 100);
-		// camera.position.set(0, 4, 10);
-		camera.lookAt(0, 200, 0);
+		// let width = window.innerWidth / 2,
+		// 	height = window.innerHeight / 2;
+		// //正交相机
+		// let camera = new THREE.OrthographicCamera(-width, width, height, -height, 1, 3000);
+		camera.position.set(0, 500, 1000);
+		camera.lookAt(0, 0, 0);
 		this.currentCamera = camera;
 
 		//添加渲染器
@@ -41,6 +45,20 @@ class GameControl {
 
 		//启动渲染器
 		this.update();
+
+		//窗口尺寸改变
+		window.addEventListener("resize", () => {
+			CoreEvent.emit(CoreEventMap.RESIZE);
+			let width = window.innerWidth / 2,
+				height = window.innerHeight / 2;
+			// camera.left = -width;
+			// camera.right = width;
+			// camera.top = height;
+			// camera.bottom = -height;
+			camera.aspect = window.innerWidth / window.innerHeight; //仅用透视
+			camera.updateProjectionMatrix();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+		});
 	}
 
 	/**

@@ -4,7 +4,7 @@ class Transform {
 	control: TransformControls | null = null;
 	constructor() {}
 
-	init(currentCamera: THREE.PerspectiveCamera, render: Function, domElement: HTMLElement) {
+	init(currentCamera: THREE.Camera, render: Function, domElement: HTMLElement) {
 		let control = new TransformControls(currentCamera, domElement);
 		this.control = control;
 
