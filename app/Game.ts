@@ -29,7 +29,7 @@ class GameControl {
 		// 	height = window.innerHeight / 2;
 		// //正交相机
 		// let camera = new THREE.OrthographicCamera(-width, width, height, -height, 1, 3000);
-		camera.position.set(0, 500, 1000);
+		camera.position.set(0, 5, 10);
 		camera.lookAt(0, 0, 0);
 		this.currentCamera = camera;
 
@@ -39,6 +39,8 @@ class GameControl {
 		renderer.setPixelRatio(window.devicePixelRatio);
 		document.body.appendChild(renderer.domElement);
 		this.renderer = renderer;
+		renderer.outputEncoding = THREE.sRGBEncoding; //TODO 不晓得这是个啥 (线性颜色渲染转换在电子的sRgb) theeJs 要先手动转sRGB然后它会默认再转成线性
+		renderer.shadowMap.enabled = true; //这貌似是开启阴影
 
 		//添加场景
 		this.scene = new THREE.Scene();

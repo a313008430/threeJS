@@ -6,15 +6,14 @@ import { GridHelper } from "three/src/helpers/GridHelper";
 import { OrbitControl } from "./lib/OrbitControl";
 import { transformControl } from "./lib/TransformControl";
 import { GameMainControl } from "./src/GameMainControl";
-import { Color } from "three";
-import { Gui } from "./lib/Gui";
 //游戏初始化
 Game.init();
 
 //辅助线 100总长宽*10个
-Game.scene.add(new GridHelper(1000, 20));
+Game.scene.add(new GridHelper(50, 100));
 //小性能面板
 let stats = new StatsControl();
+stats.rendererInfo(Game.renderer.info);
 //自由拖拽相机
 let orbitControl = new OrbitControl(Game.currentCamera, Game.render, Game.renderer.domElement);
 //物体可拖拽
