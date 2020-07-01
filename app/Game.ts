@@ -30,7 +30,7 @@ class GameControl {
 		// //正交相机
 		// let camera = new THREE.OrthographicCamera(-width, width, height, -height, 1, 3000);
 		camera.position.set(0, 5, 10);
-		camera.lookAt(0, 0, 0);
+		camera.lookAt(0, 10, 0);
 		this.currentCamera = camera;
 
 		//添加渲染器
@@ -72,7 +72,7 @@ class GameControl {
 		//这里的60 就是最大只能60帧
 		if (elapsed >= 1000 / 60) {
 			this.render();
-			CoreEvent.emit(CoreEventMap.UPDATE);
+			CoreEvent.emit(CoreEventMap.UPDATE, time / 1000);
 			//这个60的值不动 上限
 			elapsed = 1000 / 60;
 		}
