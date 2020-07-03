@@ -28,6 +28,7 @@ import {
 import { gltfLoader } from "../core/Loader";
 
 import xbot from "../res/Xbot.glb";
+import scene from "../res/scene/scene.gltf";
 import soldier from "../res/Soldier.glb";
 import baiditan_01 from "../res/baiditan_01.FBX";
 import baiditan_02 from "../res/baiditan_02.png";
@@ -36,6 +37,8 @@ import { CoreEvent, CoreEventMap } from "../core/CoreEvent";
 import { SkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { transformControl } from "../lib/TransformControl";
+import { Gui } from "../lib/Gui";
+import { HouseControl } from "./HouseControl";
 
 /**
  * 游戏主逻辑
@@ -49,9 +52,21 @@ export class GameMainControl {
 		this.setBackgroundColor();
 		this.addLight();
 
-		gltfLoader.load("../res/solodier.glb", () => {});
+		//加载天空
+		gltfLoader.load("res/sky.glb", (e) => {
+			e.scene.scale.set(1, 1, 1);
+			Game.scene.add(e.scene);
+		});
 
-		gltfLoader.load(xbot, (e: any) => {
+		//加载house
+		// gltfLoader.load("res/house/scene.gltf", (e) => {
+		gltfLoader.load("res/myhome.glb", (e) => {
+			new HouseControl(e);
+			Game.scene.add(e.scene);
+		});
+
+		//gltf加载
+		gltfLoader.load("res/Xbot.glb", (e: any) => {
 			let mixer: any[] = [];
 			for (let x = 0; x < 1; x++) {
 				let obj = SkeletonUtils.clone(e.scene) as Object3D;
@@ -59,7 +74,7 @@ export class GameMainControl {
 				obj.traverse(function (object) {
 					object.castShadow = true;
 				});
-				obj.scale.set(3, 3, 3);
+				// obj.scale.set(3, 3, 3);
 				obj.position.x = 0;
 
 				let additiveActions = ["sneak_pose", "sad_pose", "agree", "headShake"];

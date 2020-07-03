@@ -10,7 +10,9 @@ export class OrbitControl {
 		this.orbit = new OrbitControls(currentCamera, domElement);
 		this.orbit.target.set(0, 1, 0); //可以让物体在中心
 		this.orbit.update();
-		// this.orbit.addEventListener('change', )
+		// this.orbit.addEventListener("change", (e) => {
+		// 	console.log(e);
+		// });
 	}
 
 	init() {}

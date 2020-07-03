@@ -1,12 +1,21 @@
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { MathUtils } from "three/src/math/MathUtils";
+import { Object3D } from "three";
 class Transform {
 	control: TransformControls | null = null;
+	/** drag callback */
+	callBack: Function | null = null;
 	constructor() {}
 
 	init(currentCamera: THREE.Camera, render: Function, domElement: HTMLElement) {
 		let control = new TransformControls(currentCamera, domElement);
 		this.control = control;
+
+		this.control.addEventListener("dragging-changed", (e) => {
+			if (this.callBack) {
+				this.callBack(e.target as TransformControls);
+			}
+		});
 
 		window.addEventListener("keydown", function (event) {
 			switch (event.keyCode) {
@@ -95,6 +104,24 @@ class Transform {
 					break;
 			}
 		});
+	}
+
+	/**
+	 * 绑定需要拖拽的实例物体
+	 * @param obj 物体
+	 */
+	attach(obj: Object3D) {
+		this.control?.attach(obj);
+
+		return this;
+	}
+
+	/**
+	 * 监听拖拽的物体
+	 */
+	draggingChangedListener(call: (object: TransformControls) => any) {
+		this.callBack = call;
+		return this;
 	}
 }
 

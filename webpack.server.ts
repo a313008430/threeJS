@@ -33,8 +33,11 @@ const config: webpack.Configuration = {
 				use: "ts-loader",
 			},
 			{
-				test: /\.(png|svg|jpg|gif|glb|FBX)$/,
-				use: ["file-loader"],
+				test: /\.(png|svg|jpg|gif|glb|fbx|bin|gltf|jpeg)$/,
+				loader: "file-loader",
+				options: {
+					outputPath: "res",
+				},
 			},
 			{
 				test: /\.s[ac]ss$/i,

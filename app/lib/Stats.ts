@@ -30,7 +30,6 @@ export class StatsControl {
 
 	rendererInfo(info: WebGLInfo) {
 		this.info = info;
-		console.log(info);
 		setInterval(() => {
 			this.callsNode.innerText = info.render.calls + "";
 			this.linesNode.innerText = info.render.lines + "";

@@ -40,7 +40,7 @@ class GameControl {
 		document.body.appendChild(renderer.domElement);
 		this.renderer = renderer;
 		renderer.outputEncoding = THREE.sRGBEncoding; //TODO 不晓得这是个啥 (线性颜色渲染转换在电子的sRgb) theeJs 要先手动转sRGB然后它会默认再转成线性
-		renderer.shadowMap.enabled = true; //这貌似是开启阴影
+		renderer.shadowMap.enabled = false; //这貌似是开启阴影
 
 		//添加场景
 		this.scene = new THREE.Scene();
@@ -51,8 +51,8 @@ class GameControl {
 		//窗口尺寸改变
 		window.addEventListener("resize", () => {
 			CoreEvent.emit(CoreEventMap.RESIZE);
-			let width = window.innerWidth / 2,
-				height = window.innerHeight / 2;
+			// let width = window.innerWidth / 2,
+			// 	height = window.innerHeight / 2;
 			// camera.left = -width;
 			// camera.right = width;
 			// camera.top = height;
